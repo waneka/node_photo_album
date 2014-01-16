@@ -46,7 +46,7 @@ exports.file_copy = function() {
         return callback(err)
       }
 
-      is fs.createReadStream(src)
+      is = fs.createReadStream(src)
       os = fs.createWriteStream(dst)
       is.on('end', function() { callback(null) })
       is.on('error', function(e) { callback(e) })
