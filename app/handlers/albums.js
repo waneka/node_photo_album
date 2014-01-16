@@ -24,7 +24,7 @@ Album.prototype.response_obj = function() {
   return {
     name: this.name,
     date: this.date,
-    title: this.title
+    title: this.title,
     description: this.description
   }
 }
@@ -222,70 +222,3 @@ exports.add_photo_to_album = function(req, res) {
   })
 }
 
-
-function load_album_list(callback) {
-  fs.readdir('albums', function (err, files) {
-    if(err) {
-      callback(helpers.make_error('file_error', JSON.stringify(err)))
-      return
-    }
-
-    var only_dirs = [];
-
-    async.forEach(files, function(element, cb) {
-      fs.stat('albums/' + element, function(err, stats) {
-        if (err) {
-          cb(helpers.make_error('file_error', JSON.stringify(err)))
-          return
-        }
-        if (stats.isDirectory()) {
-          only_dirs.push({ name: element })
-        }
-        cb(null)
-      })
-    },
-    function(err) {
-      callback(err, err ? null : only_dirs)
-    })
-  })
-}
-
-function load_album(album_name, page, page_size, callback) {
-  fs.readdir('albums/' + album_name, function(err, files) {
-    if (err) {
-      if (err.code == "ENOENT") {
-        callback(helpers.no_such_album())
-      } else {
-        callback(helpers.make_error('file_error', JSON.stringify(err)))
-      }
-      return
-    }
-
-    var only_files = []
-    var path = 'albums/' + album_name + '/';
-
-    async.forEach(files, function(element, cb) {
-      fs.stat(path + element, function(err, stats) {
-        if (err) {
-          cb(helpers.make_error('file_error', JSON.stringify(err)))
-          return
-        }
-        if (stats.isFile()) {
-          var obj = {filename: element, desc: element }
-          only_files.push(obj)
-        }
-        cb(null)
-      })
-    },
-    function(err) {
-      if (err) {
-        callback(err)
-      } else {
-        var ps = page_size
-        var photos = only_files.splice(page * ps, ps)
-        var obj = {short_name: album_name, photos: photos }
-        callback(null, obj)
-      }
-    })
-  })
-}
