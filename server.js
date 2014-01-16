@@ -11,6 +11,9 @@ var fs = require('fs'),
     async = require('async'),
     path = require('path')
 
+app.use(express.logger('dev'))
+app.use(express.bodyParser({ keepExtensions: true }))
+
 
 // routes!! //
 app.get('/v1/albums.json', album_hdlr.list_all)
@@ -29,6 +32,10 @@ app.get('/templates/:template_name', function(req, res) {
 })
 
 app.get('*', four_oh_four)
+
+app.put('/v1/albums.json', album_hdlr.create_album)
+app.put('/v1/albums/:album_name/photos.json', album_hdlr.add_photo_to_album)
+
 
 function four_oh_four(req, res) {
   res.writeHead(404, { 'Content-Type' : 'application/json' })
