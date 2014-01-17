@@ -16,7 +16,6 @@ exports.generate = function (req, res) {
     'app/basic.html',
     function (err, contents) {
       if (err) {
-        console.log('here i am')
         helpers.send_failure(res, err);
         return;
       }
