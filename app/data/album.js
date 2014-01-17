@@ -116,20 +116,3 @@ exports.add_photo = function(photo_data, path_to_photo, callback) {
         callback(err, err ? null : final_photo)
   })
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
